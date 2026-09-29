@@ -1,0 +1,8 @@
+# Ignore Python backend and data files for Vercel frontend build
+backend/
+requirements.txt
+render.yaml
+docs/
+*.parquet
+*.geojson.gz
+tmp_*
