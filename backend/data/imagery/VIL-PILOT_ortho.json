@@ -1,0 +1,30 @@
+{
+  "provider": "Esri World Imagery (ArcGIS Online)",
+  "tile_url_template": "https://services.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
+  "attribution": "Esri, Maxar, Earthstar Geographics",
+  "licence_note": "Esri basemap tiles \u2014 attribution required; not survey-grade.",
+  "zoom": 18,
+  "tiles": [
+    18,
+    12
+  ],
+  "tiles_retrieved": 216,
+  "tile_range": {
+    "x0": 187926,
+    "y0": 116287
+  },
+  "fetched_at": "2026-09-27T14:53:12+00:00",
+  "generated_by_this_project": false,
+  "note": "Externally sourced imagery (PRD Module 03 'pre-existing data'). Acquisition date not published by provider; capture_date records the retrieval date. Mosaic extent centred on the real Bhu-Naksha parcel extent of Bond Gavhan village, Mahur taluka, Nanded.",
+  "resolution_cm_per_px": 55.958,
+  "bounds_wgs84": [
+    [
+      19.876520652831704,
+      78.07709008455276
+    ],
+    [
+      19.892011861459913,
+      78.10180395841599
+    ]
+  ]
+}

@@ -1,0 +1,103 @@
+# Rural Land Resurvey Triage — calibration config (PRD "Reference Config").
+# Every triage threshold lives here, NOT in code: change a value, re-run the
+# pipeline, outcomes change (US-0.2).
+
+match:
+  MIN_IOU_ONE_TO_ONE: 0.30      # Min IoU for a clean 1:1 match
+  MIN_IOU_FLOOR: 0.05           # Below this, treated as no overlap
+  SPLIT_COMBINED_IOU: 0.50      # Combined IoU to call a split
+  MERGE_MIN_OVERLAP_FRAC: 0.30  # Min overlap fraction per parcel to call a merge
+
+clear:
+  MAX_AREA_DIFF_PCT: 3.0                # %
+  MAX_BOUNDARY_DISPLACEMENT_M: 0.50     # metres
+  MIN_SUPPORT_RATIO_PCT: 90.0           # %
+
+insufficient:
+  MIN_AI_CONFIDENCE: 0.50        # below -> insufficient evidence
+  MAX_OCCLUSION_FRAC: 0.40       # above -> insufficient evidence
+
+boundary:
+  SUPPORT_BUFFER_M: 1.0          # buffer used for support-ratio calc
+  SAMPLE_INTERVAL_M: 0.5         # vertex-densify interval for ASBD
+
+topology:
+  MAX_NEIGHBOR_OVERLAP_PCT: 2.0  # % of parcel area
+
+uncertainty:
+  # uncertainty_score = W_AI_CONF*(1-ai_conf) + W_GEOREF*norm(rmse)
+  #                   + W_OCCL*occlusion + W_SUPPORT*(1-support/100)
+  W_AI_CONFIDENCE: 0.35
+  W_GEOREF_RMSE: 0.15
+  W_OCCLUSION: 0.30
+  W_SUPPORT: 0.20
+  GEOREF_RMSE_NORM_M: 10.0   # rmse >= this scores 1.0 (normalizer; not in PRD)
+
+quality:
+  GOOD_MAX_UNCERTAINTY: 0.25
+  MODERATE_MAX_UNCERTAINTY: 0.50
+
+# Occlusion heuristic measured on the REAL orthomosaic pixels of each parcel
+# (Excess-Green + shadow mask). PRD allows the synthetic path to sample a
+# distribution instead; we always prefer measured imagery where it exists.
+occlusion:
+  SHADOW_V_MAX: 42.0        # mean RGB below this = shadowed
+  DENSE_EXG_MIN: 65.0       # Excess-Green above this = canopy hiding boundaries
+  SCALE: 1.0                # calibration multiplier (0 disables measurement)
+  FALLBACK_MEAN: 0.12       # used only when no imagery is available
+  FALLBACK_SD: 0.08
+
+kpi:
+  FALSE_CLEAR_ERROR_M: 0.5   # an audit "found wrong" beyond this error, or non-ACCEPT decision
+
+extraction:
+  # Tier 2 classical CV on the REAL orthomosaic (PRD Module 04, "interim real"
+  # path) is now the default — real parcels under real imagery. Tier 3
+  # synthetic fallback engages only when CV returns nothing (see run_full).
+  synthetic:
+    DEFAULT_TIER: CV_MODEL
+    SHIFT_CLEAN_M: [0.10, 0.30]     # clean-plot boundary jitter
+    SHIFT_DRIFT_M: [0.70, 1.60]     # drifted boundary -> FLAGGED
+    CONFIDENCE_CLEAN: [0.82, 0.95]
+    CONFIDENCE_DIRTY: [0.55, 0.75]
+    JITTER_SD_M: 0.06               # vertex noise on clean plots
+    # Designed edge cases so matching/triage always have something to show:
+    SPLIT_COUNT: 2                  # parcels split into 2 AI polygons
+    MERGE_PAIRS: 1                  # pairs of parcels merged into 1 AI polygon
+    NO_MATCH_COUNT: 1               # parcels with no AI polygon at all
+    LOW_CONFIDENCE_COUNT: 1         # parcels below INSUFFICIENT_MIN_AI_CONFIDENCE
+  cv:
+    CANNY_LOW: 30
+    CANNY_HIGH: 90
+    DP_SCALE_PX: 3.0
+    MIN_AREA_HA: 0.30
+    MAX_AREA_HA: 15.00
+  # Tier 1: real delineated field polygons co-located with the pilot extent
+  # (PRD Module 04 "pre-existing dataset" path). Vendored FTW India-10K
+  # (CC-BY-4.0) first, OSM farmland (ODbL) second; honest report when the
+  # vendored sets have nothing co-located (see pipeline/realobs.py).
+  real:
+    MAX_DIST_M: 2000.0
+    MAX_POLYS: 60
+  # Tier 2a: parcel-guided snap of each recorded ring to real mosaic edges
+  # (one observed polygon per parcel; displacement/support measured, not set).
+  guided:
+    # Search radius for the real-boundary reading (metres). Calibrated on
+    # the pilot mosaic: <=2 m the snap stops moving the record (30/30
+    # clear, metrics stop discriminating); 8 m flags every parcel on
+    # support alone (0/30 clear); 4 m keeps a real, discriminating mix
+    # (5/30 clear, support p50 86%, ASBD p50 0.40 m).
+    SNAP_RADIUS_M: 4.0
+    CROP_MARGIN_PX: 40
+    DENSIFY_M: 5.0
+    CANNY_LOW: 30
+    CANNY_HIGH: 90
+    CONFIDENCE_BASE: 0.55
+    CONFIDENCE_SLOPE: 0.35
+
+georeferencing:
+  # Distort-then-recover demo (PRD Module 02, marked as an assumption there)
+  SCAN_ROTATION_DEG: 3.5
+  SCAN_SCALE_PCT: 4.0
+  SCAN_NOISE_M: 1.2          # control-point measurement noise, metres
+  CONTROL_POINT_GRID: 6      # NxN grid of ground control points

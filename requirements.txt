@@ -1,0 +1,15 @@
+# Rural Land Resurvey Triage — backend (FastAPI + Shapely)
+fastapi==0.141.1
+uvicorn==0.34.0
+pydantic==2.13.5
+shapely==2.0.6
+pyproj==3.7.1
+numpy==2.2.6
+pillow==12.3.0
+opencv-python==5.0.0.93
+PyYAML==6.0.3
+requests==2.34.2
+
+# test
+pytest==9.1.1
+httpx==0.28.1

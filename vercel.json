@@ -1,0 +1,11 @@
+{
+  "buildCommand": "npm --prefix frontend run build",
+  "outputDirectory": "frontend/dist",
+  "framework": "vite",
+  "rewrites": [
+    { "source": "/api/(.*)", "destination": "https://YOUR-BACKEND.onrender.com/api/$1" },
+    { "source": "/static/(.*)", "destination": "https://YOUR-BACKEND.onrender.com/static/$1" },
+    { "source": "/health", "destination": "https://YOUR-BACKEND.onrender.com/health" },
+    { "source": "/(.*)", "destination": "/index.html" }
+  ]
+}

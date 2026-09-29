@@ -1,0 +1,30 @@
+# Pilot site — REAL Bhu-Naksha cadastral cluster + REAL Esri imagery
+# (PRD Module 01 "pre-existing dataset" path, Module 03 "pre-existing data").
+# Parcels: Bond Gavhan village (बोंड गव्हाण), Mahur taluka, Nanded district,
+# Maharashtra — full village, 30 REAL parcel polygons, survey nos 1-30, as
+# recorded by the Maharashtra Department of Land Records
+# (via huggingface.co/datasets/Ashutosh99/maharashtra-cadastral-tier-a,
+# Tier A, ODbL-1.0, source https://mahabhunakasha.mahabhumi.gov.in/).
+# Vendored at backend/data/pilot_village_real.geojson.
+# Imagery: REAL Esri World Imagery mosaic (z18, ~0.56 m/px) covering the
+# parcel extent + 1-tile margin, vendored at
+# backend/data/imagery/VIL-PILOT_ortho.{png,pgw,json} (Module 03).
+# Elevation: REAL Copernicus GLO-30 DEM values via the open-meteo elevation
+# API (258 m mean over the extent; per-parcel values sampled ±4 m at seed
+# time — see pipeline/runner.py). Owner names stay MOCK placeholders
+# (Tier A excludes owner data; labelled as such in the UI).
+name: Bond Gavhan
+taluka: Mahur
+district: Nanded
+state: Maharashtra
+country: India
+lat: 19.88471
+lon: 78.08788
+zoom: 18
+tiles: 10                # seed-time fetch window; the vendored mosaic itself is
+                         # extent-driven (18x12 tiles) over the parcel bounding box
+elevation_m: 258.0       # REAL Copernicus GLO-30 DEM via open-meteo (258 m centre)
+seed: 42
+parcel_count: 30
+tile_url: "https://services.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}"
+attribution: "Esri, Maxar, Earthstar Geographics"

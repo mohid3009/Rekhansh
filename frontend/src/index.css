@@ -1,0 +1,36 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto,
+    "Helvetica Neue", Arial, sans-serif;
+  background: #f8fafc;
+  color: #0f172a;
+}
+
+/* prototype banner stripe, PRD US-0.4 */
+.prototype-banner {
+  background: repeating-linear-gradient(
+    45deg,
+    #fef3c7,
+    #fef3c7 12px,
+    #fde68a 12px,
+    #fde68a 24px
+  );
+}
+
+@keyframes pulse-once {
+  0% { opacity: 0.4; }
+  50% { opacity: 1; }
+  100% { opacity: 0.4; }
+}
+.animate-pulse-once {
+  animation: pulse-once 0.9s ease-in-out 2;
+}

@@ -1,0 +1,18 @@
+# Render.com web service for the FastAPI backend.
+# Replace the CORS origin with your deployed frontend URL (Vercel/Netlify domain).
+services:
+  - type: web
+    name: rural-land-resurvey-api
+    runtime: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: python -m uvicorn app.main:app --app-dir backend --host 0.0.0.0 --port $PORT
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.9
+      - key: CORS_ORIGINS
+        value: https://YOUR-FRONTEND.vercel.app
+      # Optional: pre-warm from committed imagery instead of fetching tiles.
+      # The imagery + OSM context are committed under backend/data/, so the
+      # service never needs outbound network at boot (US-0.2).
+      - key: LOG_LEVEL
+        value: info
